@@ -86,14 +86,13 @@ platform_counts = filtered_df.groupby('primary_platform').agg(
 
 fig1, ax1 = plt.subplots(figsize=(7, 7))
 
-color=platform_colors
 
 ax1.pie(
     platform_counts['user_count'],
     labels=platform_counts['primary_platform'],
     autopct='%1.1f%%',
     startangle=90,
-    colors=colors,
+    colors=platform_colors,
     wedgeprops={'edgecolor': 'white'}
 )
 
