@@ -113,34 +113,28 @@ st.subheader("⏱️ Objective 2: Average Daily Usage Time by Platform")
 
 avg_usage = filtered_df.groupby('primary_platform').agg(
     avg_daily_hours=('daily_usage_hours', 'mean')
-).reset_index().sort_values('avg_daily_hours', ascending=False)
+).reset_index()
+
 avg_usage['avg_daily_hours'] = avg_usage['avg_daily_hours'].round(2)
 
-fig2, ax2 = plt.subplots(figsize=(8, 4))
-bars = ax2.bar(
-    avg_usage['primary_platform'],
-    avg_usage['avg_daily_hours'],
-    color=['#4C72B0', '#DD8452', '#55A868', '#C44E52', '#8172B2'],
-    edgecolor='white'
-)
-ax2.set_title('Average Daily Social Media Usage Hours by Platform', fontsize=14, fontweight='bold')
-ax2.set_xlabel('Social Media Platform', fontsize=12)
-ax2.set_ylabel('Average Daily Usage (Hours)', fontsize=12)
-ax2.set_ylim(0, avg_usage['avg_daily_hours'].max() + 1)
+fig2, ax2 = plt.subplots(figsize=(7, 7))
 
-for bar, val in zip(ax2.patches, avg_usage['avg_daily_hours']):
-    ax2.text(
-        bar.get_x() + bar.get_width() / 2,
-        bar.get_height() + 0.05,
-        f'{val:.2f} hrs',
-        ha='center', va='bottom', fontsize=10
-    )
+ax2.pie(
+    avg_usage['avg_daily_hours'],
+    labels=avg_usage['primary_platform'],
+    autopct='%1.1f%%',
+    startangle=90
+)
+
+ax2.set_title(
+    'Share of Average Daily Social Media Usage Hours by Platform',
+    fontsize=14,
+    fontweight='bold'
+)
 
 plt.tight_layout()
 st.pyplot(fig2)
 plt.close()
-
-st.divider()
 
 # ============================================================
 # OBJECTIVE 3: ADDICTION LEVEL DISTRIBUTION BY PLATFORM
