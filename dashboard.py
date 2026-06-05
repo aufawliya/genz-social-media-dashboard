@@ -103,33 +103,46 @@ plt.close()
 st.divider()
 
 # ============================================================
-# OBJECTIVE 2: DAILY USAGE DISTRIBUTION — BOX PLOT
+# OBJECTIVE 2: AVERAGE DAILY USAGE — LINE PLOT
 # ============================================================
-st.subheader("⏱️ Objective 2: Distribution of Daily Usage Hours by Platform")
+st.subheader("📈 Objective 3: Average Daily Usage Hours by Platform")
 
-platforms = filtered_df['primary_platform'].unique().tolist()
+# Bold colour palette
+platform_colors = ['#FF1493',  # Deep Pink
+                   '#FF4500',  # Orange Red
+                   '#32CD32',  # Lime Green
+                   '#1E90FF',  # Dodger Blue
+                   '#FFD700']  # Gold
 
-data_per_platform = [
-    filtered_df[filtered_df['primary_platform'] == p]['daily_usage_hours'].values
-    for p in platforms
-]
+font = 'Palatino Linotype'
 
-fig2, ax2 = plt.subplots(figsize=(9, 5))
-bp = ax2.boxplot(
-    data_per_platform,
-    labels=platforms,
-    patch_artist=True,
-    medianprops={'color': '#333333', 'linewidth': 2}
-)
+# Grouping
+avg_usage = df.groupby('primary_platform')['daily_usage_hours'].mean()
 
-for patch, color in zip(bp['boxes'], platform_colors):
-    patch.set_facecolor(color)
+# Create figure and axis
+fig2, ax2 = plt.subplots(figsize=(8, 5))
 
-ax2.set_title('Distribution of Daily Usage Hours by Platform',
+# Background
+fig2.patch.set_facecolor('#FFF0F5')
+ax2.set_facecolor('#FFF0F5')
+
+# Hot pink dotted line
+avg_usage.plot(kind='line', marker='o', ax=ax2,
+               color='hotpink', linestyle='--', linewidth=2,
+               markeredgecolor='white', markeredgewidth=1.5, markersize=8)
+
+# Bold colours for each point
+for i, (x_val, y_val, color) in enumerate(zip(avg_usage.index, avg_usage.values, platform_colors)):
+    ax2.plot(x_val, y_val, marker='o', markersize=10,
+             color=color, markeredgecolor='white', markeredgewidth=1.5)
+
+# Titles and labels
+ax2.set_title('Average Daily Usage Time by Platform',
               fontsize=14, fontweight='bold', fontfamily=font)
-ax2.set_xlabel('Social Media Platform', fontsize=12, fontfamily=font)
-ax2.set_ylabel('Daily Usage Hours', fontsize=12, fontfamily=font)
+ax2.set_xlabel('Platform', fontsize=12, fontfamily=font)
+ax2.set_ylabel('Average Daily Usage Hours', fontsize=12, fontfamily=font)
 
+# Apply font to tick labels
 for tick in ax2.get_xticklabels() + ax2.get_yticklabels():
     tick.set_fontfamily(font)
 
