@@ -114,24 +114,19 @@ plt.close()
 # OBJECTIVE 2: AVERAGE DAILY USAGE BY PLATFORM
 # ============================================================
 st.subheader("⏱️ Objective 2: Average Daily Usage Time by Platform")
+
+
+avg_usage = filtered_df.groupby('primary_platform')['daily_usage_hours'].mean()
+
 fig2, ax2 = plt.subplots(figsize=(8, 5))
 
-filtered_df.boxplot(
-    column='daily_usage_hours',
-    by='primary_platform',
-    ax=ax2
-)
+avg_usage.plot(kind='line', marker='o', ax=ax2)
 
-color=platform_colors
+ax2.set_title('Average Daily Usage Time by Platform')
+ax2.set_xlabel('Platform')
+ax2.set_ylabel('Average Daily Usage Hours')
 
-ax2.set_title('Distribution of Daily Usage Hours by Platform',  fontfamily=font)
-ax2.set_xlabel('Platform', fontfamily=font)
-ax2.set_ylabel('Daily Usage Hours', fontfamily=font)
-
-plt.suptitle('')
-plt.tight_layout()
 st.pyplot(fig2)
-plt.close()
 
 # ============================================================
 # OBJECTIVE 3: ADDICTION LEVEL DISTRIBUTION BY PLATFORM
