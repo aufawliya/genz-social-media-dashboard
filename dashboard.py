@@ -11,6 +11,10 @@ st.set_page_config(
     layout="wide"
 )
 
+platform_colors = ['#FFB3C1', '#FFDDA1', '#B5EAD7', '#C7CEEA', '#FFFACD']
+addiction_colors = {'Low': '#B5EAD7', 'Medium': '#FFDDA1', 'High': '#FFB3C1'}
+font = 'Palatino'
+
 # ============================================================
 # LOAD DATA
 # ============================================================
@@ -82,7 +86,7 @@ platform_counts = filtered_df.groupby('primary_platform').agg(
 
 fig1, ax1 = plt.subplots(figsize=(7, 7))
 
-colors = ['#E1306C', '#1DA1F2', '#FF0050', '#FF0000', '#FFFC00']
+color=platform_colors
 
 ax1.pie(
     platform_counts['user_count'],
@@ -97,6 +101,7 @@ ax1.set_title(
     'Distribution of Gen-Z Users by Primary Social Media Platform',
     fontsize=14,
     fontweight='bold'
+    fontfamily=font
 )
 
 ax1.axis('equal')  # Makes the pie chart circular
@@ -117,9 +122,11 @@ filtered_df.boxplot(
     ax=ax2
 )
 
-ax2.set_title('Distribution of Daily Usage Hours by Platform')
-ax2.set_xlabel('Platform')
-ax2.set_ylabel('Daily Usage Hours')
+color=platform_colors
+
+ax2.set_title('Distribution of Daily Usage Hours by Platform',  fontfamily=font)
+ax2.set_xlabel('Platform', fontfamily=font)
+ax2.set_ylabel('Daily Usage Hours', fontfamily=font)
 
 plt.suptitle('')
 plt.tight_layout()
@@ -139,7 +146,7 @@ addiction_dist = filtered_df.groupby(
 
 platforms = addiction_dist['primary_platform'].unique()
 addiction_levels = ['Low', 'Medium', 'High']
-colors = {'Low': '#2ecc71', 'Medium': '#f39c12', 'High': '#e74c3c'}
+color=addiction_colors[level]
 
 x = range(len(platforms))
 width = 0.25
