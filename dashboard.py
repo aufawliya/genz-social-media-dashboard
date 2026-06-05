@@ -100,7 +100,7 @@ ax1.pie(
 ax1.set_title(
     'Distribution of Gen-Z Users by Primary Social Media Platform',
     fontsize=14,
-    fontweight='bold'
+    fontweight='bold',
     fontfamily=font
 )
 
