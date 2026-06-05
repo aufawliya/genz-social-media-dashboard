@@ -140,7 +140,6 @@ addiction_dist = filtered_df.groupby(
 
 platforms = addiction_dist['primary_platform'].unique()
 addiction_levels = ['Low', 'Medium', 'High']
-color=addiction_colors[level]
 
 x = range(len(platforms))
 width = 0.25
@@ -156,7 +155,7 @@ for i, level in enumerate(addiction_levels):
         level_data['user_count'],
         width=width,
         label=level,
-        color=colors[level],
+        color=addiction_colors,
         edgecolor='white'
     )
 
