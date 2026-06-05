@@ -110,28 +110,19 @@ st.divider()
 # OBJECTIVE 2: AVERAGE DAILY USAGE BY PLATFORM
 # ============================================================
 st.subheader("⏱️ Objective 2: Average Daily Usage Time by Platform")
+fig2, ax2 = plt.subplots(figsize=(8, 5))
 
-avg_usage = filtered_df.groupby('primary_platform').agg(
-    avg_daily_hours=('daily_usage_hours', 'mean')
-).reset_index()
-
-avg_usage['avg_daily_hours'] = avg_usage['avg_daily_hours'].round(2)
-
-fig2, ax2 = plt.subplots(figsize=(7, 7))
-
-ax2.pie(
-    avg_usage['avg_daily_hours'],
-    labels=avg_usage['primary_platform'],
-    autopct='%1.1f%%',
-    startangle=90
+filtered_df.boxplot(
+    column='daily_usage_hours',
+    by='primary_platform',
+    ax=ax2
 )
 
-ax2.set_title(
-    'Share of Average Daily Social Media Usage Hours by Platform',
-    fontsize=14,
-    fontweight='bold'
-)
+ax2.set_title('Distribution of Daily Usage Hours by Platform')
+ax2.set_xlabel('Platform')
+ax2.set_ylabel('Daily Usage Hours')
 
+plt.suptitle('')
 plt.tight_layout()
 st.pyplot(fig2)
 plt.close()
