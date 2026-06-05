@@ -80,31 +80,30 @@ platform_counts = filtered_df.groupby('primary_platform').agg(
     user_count=('primary_platform', 'count')
 ).reset_index().sort_values('user_count', ascending=False)
 
-fig1, ax1 = plt.subplots(figsize=(8, 4))
-ax1.bar(
-    platform_counts['primary_platform'],
-    platform_counts['user_count'],
-    color=['#E1306C', '#1DA1F2', '#FF0050', '#FF0000', '#FFFC00'],
-    edgecolor='white'
-)
-ax1.set_title('Number of Gen-Z Users by Primary Social Media Platform', fontsize=14, fontweight='bold')
-ax1.set_xlabel('Social Media Platform', fontsize=12)
-ax1.set_ylabel('Number of Users', fontsize=12)
-ax1.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x):,}'))
+fig1, ax1 = plt.subplots(figsize=(7, 7))
 
-for bar, val in zip(ax1.patches, platform_counts['user_count']):
-    ax1.text(
-        bar.get_x() + bar.get_width() / 2,
-        bar.get_height() + 1000,
-        f'{int(val):,}',
-        ha='center', va='bottom', fontsize=10
-    )
+colors = ['#E1306C', '#1DA1F2', '#FF0050', '#FF0000', '#FFFC00']
+
+ax1.pie(
+    platform_counts['user_count'],
+    labels=platform_counts['primary_platform'],
+    autopct='%1.1f%%',
+    startangle=90,
+    colors=colors,
+    wedgeprops={'edgecolor': 'white'}
+)
+
+ax1.set_title(
+    'Distribution of Gen-Z Users by Primary Social Media Platform',
+    fontsize=14,
+    fontweight='bold'
+)
+
+ax1.axis('equal')  # Makes the pie chart circular
 
 plt.tight_layout()
 st.pyplot(fig1)
 plt.close()
-
-st.divider()
 
 # ============================================================
 # OBJECTIVE 2: AVERAGE DAILY USAGE BY PLATFORM
