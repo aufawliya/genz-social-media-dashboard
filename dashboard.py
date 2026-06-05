@@ -31,6 +31,13 @@ def load_data():
 df = load_data()
 
 # ============================================================
+# HELPER FUNCTION: CONSISTENT BACKGROUND
+# ============================================================
+def set_chart_background(fig, ax, color="#FFF0F5"):
+    fig.patch.set_facecolor(color)   # figure background
+    ax.set_facecolor(color)          # axes background
+
+# ============================================================
 # DASHBOARD TITLE & DESCRIPTION
 # ============================================================
 st.title("📱 Gen-Z Social Media Usage Dashboard")
@@ -95,6 +102,8 @@ ax1.set_title(
     fontsize=14, fontweight='bold', fontfamily=font
 )
 ax1.axis('equal')
+
+set_chart_background(fig1, ax1)
 
 plt.tight_layout()
 st.pyplot(fig1)
@@ -196,6 +205,8 @@ for tick in ax3.get_yticklabels():
 
 ax3.legend(title='Addiction Level', fontsize=10, title_fontsize=10,
            prop={'family': font})
+
+set_chart_background(fig3, ax3)  
 
 plt.tight_layout()
 st.pyplot(fig3)
