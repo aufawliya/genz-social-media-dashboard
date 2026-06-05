@@ -13,7 +13,7 @@ st.set_page_config(
 
 platform_colors = ['#FFB3C1', '#FFDDA1', '#B5EAD7', '#C7CEEA', '#FFFACD']
 addiction_colors = {'Low': '#B5EAD7', 'Medium': '#FFDDA1', 'High': '#FFB3C1'}
-font = 'Palatino'
+font = 'Palatino Linotype'
 
 # ============================================================
 # LOAD DATA
