@@ -46,7 +46,6 @@ st.divider()
 # ============================================================
 st.sidebar.header("🔍 Filters")
 
-# Gender filter
 all_genders = df['gender'].unique().tolist()
 selected_genders = st.sidebar.multiselect(
     "Select Gender",
@@ -54,7 +53,6 @@ selected_genders = st.sidebar.multiselect(
     default=all_genders
 )
 
-# Age range filter
 min_age, max_age = int(df['age'].min()), int(df['age'].max())
 selected_age = st.sidebar.slider(
     "Select Age Range",
@@ -63,20 +61,18 @@ selected_age = st.sidebar.slider(
     value=(min_age, max_age)
 )
 
-# Apply filters
 filtered_df = df[
     (df['gender'].isin(selected_genders)) &
     (df['age'] >= selected_age[0]) &
     (df['age'] <= selected_age[1])
 ]
 
-# Show how many records are currently shown
 st.sidebar.markdown(f"**Records shown:** {len(filtered_df):,}")
 
 st.divider()
 
 # ============================================================
-# OBJECTIVE 1: PLATFORM POPULARITY
+# OBJECTIVE 1: PLATFORM POPULARITY — PIE CHART
 # ============================================================
 st.subheader("📊 Objective 1: Most Commonly Used Social Media Platforms")
 
@@ -85,50 +81,66 @@ platform_counts = filtered_df.groupby('primary_platform').agg(
 ).reset_index().sort_values('user_count', ascending=False)
 
 fig1, ax1 = plt.subplots(figsize=(7, 7))
-
-
 ax1.pie(
     platform_counts['user_count'],
     labels=platform_counts['primary_platform'],
     autopct='%1.1f%%',
-    startangle=90,
     colors=platform_colors,
-    wedgeprops={'edgecolor': 'white'}
+    startangle=140,
+    wedgeprops={'edgecolor': 'white', 'linewidth': 1.5},
+    textprops={'fontfamily': font, 'fontsize': 11}
 )
-
 ax1.set_title(
     'Distribution of Gen-Z Users by Primary Social Media Platform',
-    fontsize=14,
-    fontweight='bold',
-    fontfamily=font
+    fontsize=14, fontweight='bold', fontfamily=font
 )
-
-ax1.axis('equal')  # Makes the pie chart circular
+ax1.axis('equal')
 
 plt.tight_layout()
 st.pyplot(fig1)
 plt.close()
 
+st.divider()
+
 # ============================================================
-# OBJECTIVE 2: AVERAGE DAILY USAGE BY PLATFORM
+# OBJECTIVE 2: DAILY USAGE DISTRIBUTION — BOX PLOT
 # ============================================================
-st.subheader("⏱️ Objective 2: Average Daily Usage Time by Platform")
+st.subheader("⏱️ Objective 2: Distribution of Daily Usage Hours by Platform")
 
+platforms = filtered_df['primary_platform'].unique().tolist()
 
-avg_usage = filtered_df.groupby('primary_platform')['daily_usage_hours'].mean()
+data_per_platform = [
+    filtered_df[filtered_df['primary_platform'] == p]['daily_usage_hours'].values
+    for p in platforms
+]
 
-fig2, ax2 = plt.subplots(figsize=(8, 5))
+fig2, ax2 = plt.subplots(figsize=(9, 5))
+bp = ax2.boxplot(
+    data_per_platform,
+    labels=platforms,
+    patch_artist=True,
+    medianprops={'color': '#333333', 'linewidth': 2}
+)
 
-avg_usage.plot(kind='line', marker='o', ax=ax2)
+for patch, color in zip(bp['boxes'], platform_colors):
+    patch.set_facecolor(color)
 
-ax2.set_title('Average Daily Usage Time by Platform')
-ax2.set_xlabel('Platform')
-ax2.set_ylabel('Average Daily Usage Hours')
+ax2.set_title('Distribution of Daily Usage Hours by Platform',
+              fontsize=14, fontweight='bold', fontfamily=font)
+ax2.set_xlabel('Social Media Platform', fontsize=12, fontfamily=font)
+ax2.set_ylabel('Daily Usage Hours', fontsize=12, fontfamily=font)
 
+for tick in ax2.get_xticklabels() + ax2.get_yticklabels():
+    tick.set_fontfamily(font)
+
+plt.tight_layout()
 st.pyplot(fig2)
+plt.close()
+
+st.divider()
 
 # ============================================================
-# OBJECTIVE 3: ADDICTION LEVEL DISTRIBUTION BY PLATFORM
+# OBJECTIVE 3: ADDICTION LEVEL DISTRIBUTION — GROUPED BAR
 # ============================================================
 st.subheader("⚠️ Objective 3: Addiction Level Distribution by Platform")
 
@@ -140,7 +152,6 @@ addiction_dist = filtered_df.groupby(
 
 platforms = addiction_dist['primary_platform'].unique()
 addiction_levels = ['Low', 'Medium', 'High']
-
 x = range(len(platforms))
 width = 0.25
 
@@ -148,24 +159,30 @@ fig3, ax3 = plt.subplots(figsize=(10, 5))
 
 for i, level in enumerate(addiction_levels):
     level_data = addiction_dist[addiction_dist['addiction_level'] == level].copy()
-    level_data['addiction_level'] = level_data['addiction_level'].astype(str)  # ← fix: drop categorical type
+    level_data['addiction_level'] = level_data['addiction_level'].astype(str)
     level_data = level_data.set_index('primary_platform').reindex(platforms, fill_value=0)
     ax3.bar(
         [pos + i * width for pos in x],
         level_data['user_count'],
         width=width,
         label=level,
-        color=addiction_colors,
+        color=addiction_colors[level],  # ← fixed: was addiction_colors (wrong)
         edgecolor='white'
     )
 
-ax3.set_title('Addiction Level Distribution Across Social Media Platforms', fontsize=14, fontweight='bold')
-ax3.set_xlabel('Social Media Platform', fontsize=12)
-ax3.set_ylabel('Number of Users', fontsize=12)
+ax3.set_title('Addiction Level Distribution Across Social Media Platforms',
+              fontsize=14, fontweight='bold', fontfamily=font)
+ax3.set_xlabel('Social Media Platform', fontsize=12, fontfamily=font)
+ax3.set_ylabel('Number of Users', fontsize=12, fontfamily=font)
 ax3.set_xticks([pos + width for pos in x])
-ax3.set_xticklabels(platforms)
+ax3.set_xticklabels(platforms, fontfamily=font)
 ax3.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x):,}'))
-ax3.legend(title='Addiction Level', fontsize=10)
+
+for tick in ax3.get_yticklabels():
+    tick.set_fontfamily(font)
+
+ax3.legend(title='Addiction Level', fontsize=10, title_fontsize=10,
+           prop={'family': font})
 
 plt.tight_layout()
 st.pyplot(fig3)
