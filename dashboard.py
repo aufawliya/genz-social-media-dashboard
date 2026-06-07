@@ -182,7 +182,10 @@ with col_right:
                   fontsize=13, fontweight='bold', fontfamily=font)
     ax2.set_xlabel('Social Media Platform', fontsize=11, fontfamily=font)
     ax2.set_ylabel('Average Daily Usage (Hours)', fontsize=11, fontfamily=font)
-    ax2.set_ylim(0, avg_usage['avg_daily_hours'].max() + 0.5)
+    ax2.set_ylim(
+    avg_usage['avg_daily_hours'].min() - 0.05,
+    avg_usage['avg_daily_hours'].max() + 0.05
+)
 
     for tick in ax2.get_xticklabels() + ax2.get_yticklabels():
         tick.set_fontfamily(font)
