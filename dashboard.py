@@ -13,7 +13,7 @@ st.set_page_config(
 
 platform_colors = ['#FFB3C1', '#FFDDA1', '#B5EAD7', '#C7CEEA', '#FFFACD']
 addiction_colors = {'Low': '#B5EAD7', 'Medium': '#FFDDA1', 'High': '#FFB3C1'}
-font = 'Palatino Linotype'
+font = 'DejaVu Serif'
 
 def set_chart_background(fig, ax, color="#FFF0F5"):
     fig.patch.set_facecolor('#FFD6E0')
