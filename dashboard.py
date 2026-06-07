@@ -16,8 +16,42 @@ addiction_colors = {'Low': '#B5EAD7', 'Medium': '#FFDDA1', 'High': '#FFB3C1'}
 font = 'Palatino Linotype'
 
 def set_chart_background(fig, ax, color="#FFF0F5"):
-    fig.patch.set_facecolor('#FFD6E0')  # outer pink
-    ax.set_facecolor(color)             # inner lighter pink
+    fig.patch.set_facecolor('#FFD6E0')
+    ax.set_facecolor(color)
+
+# ============================================================
+# CUSTOM CSS STYLING
+# ============================================================
+st.markdown("""
+    <style>
+    /* Sidebar background colour */
+    [data-testid="stSidebar"] {
+        background-color: #FFD6E0;
+    }
+
+    /* Sidebar text colour */
+    [data-testid="stSidebar"] .css-1d391kg,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] label {
+        color: #5c3d4e;
+        font-family: 'Palatino Linotype', serif;
+    }
+
+    /* Metric card styling */
+    [data-testid="stMetric"] {
+        background-color: #FFF0F5;
+        border: 1px solid #FFB3C1;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    /* Main background */
+    .stApp {
+        background-color: #FFF5F8;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # ============================================================
 # LOAD DATA
@@ -35,20 +69,55 @@ def load_data():
 df = load_data()
 
 # ============================================================
-# DASHBOARD TITLE & DESCRIPTION
+# BANNER
 # ============================================================
-st.title("📱 Gen-Z Social Media Usage Dashboard")
 st.markdown("""
-This dashboard explores social media usage patterns among Gen-Z users (aged 13–27),
-focusing on platform popularity, daily usage time, and addiction level distribution.
-""")
-
-st.divider()
+    <div style="
+        background: linear-gradient(135deg, #FFB3C1, #FFDDA1, #B5EAD7);
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 12px rgba(255, 179, 193, 0.4);
+    ">
+        <h1 style="
+            color: #5c3d4e;
+            font-family: 'Palatino Linotype', serif;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        ">📱 Gen-Z Social Media Usage Dashboard</h1>
+        <p style="
+            color: #7a5565;
+            font-family: 'Palatino Linotype', serif;
+            font-size: 1.1em;
+            margin: 0;
+        ">
+        🌸 Exploring social media habits of Gen-Z users aged 13–27 🌸
+        </p>
+        <p style="
+            color: #7a5565;
+            font-family: 'Palatino Linotype', serif;
+            font-size: 0.95em;
+            margin-top: 8px;
+        ">
+        Focusing on platform popularity · daily usage time · addiction level distribution
+        </p>
+    </div>
+""", unsafe_allow_html=True)
 
 # ============================================================
 # SIDEBAR FILTERS
 # ============================================================
 st.sidebar.header("🔍 Filters")
+
+st.sidebar.markdown("""
+    <div style="
+        text-align: center;
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        letter-spacing: 5px;
+    ">🌸 🌷 🌸</div>
+""", unsafe_allow_html=True)
 
 all_genders = df['gender'].unique().tolist()
 selected_genders = st.sidebar.multiselect(
@@ -73,11 +142,24 @@ filtered_df = df[
 
 st.sidebar.markdown(f"**Records shown:** {len(filtered_df):,}")
 
-st.divider()
+# ============================================================
+# DECORATIVE DIVIDER FUNCTION
+# ============================================================
+def decorative_divider():
+    st.markdown("""
+        <div style="
+            text-align: center;
+            font-size: 1.4em;
+            margin: 10px 0;
+            color: #FFB3C1;
+            letter-spacing: 8px;
+        ">✦ ✦ ✦</div>
+    """, unsafe_allow_html=True)
 
 # ============================================================
 # SUMMARY STATS — METRIC CARDS
 # ============================================================
+decorative_divider()
 st.subheader("📈 Dataset Overview")
 
 col1, col2, col3, col4 = st.columns(4)
@@ -109,7 +191,7 @@ with col4:
         value=top_platform
     )
 
-st.divider()
+decorative_divider()
 
 # ============================================================
 # ROW 1 — OBJECTIVE 1 (left) + OBJECTIVE 2 (right)
@@ -175,7 +257,7 @@ with col_right:
     ):
         ax2.plot(x_val, y_val, marker='o', markersize=12,
                  color=color, markeredgecolor='white', markeredgewidth=1.5)
-        ax2.text(x_val, y_val + 0.02, f'{y_val:.2f} hrs',
+        ax2.text(x_val, y_val + 0.002, f'{y_val:.2f} hrs',
                  ha='center', va='bottom', fontsize=10, fontfamily=font)
 
     ax2.set_title('Average Daily Usage Hours by Platform',
@@ -183,9 +265,9 @@ with col_right:
     ax2.set_xlabel('Social Media Platform', fontsize=11, fontfamily=font)
     ax2.set_ylabel('Average Daily Usage (Hours)', fontsize=11, fontfamily=font)
     ax2.set_ylim(
-    avg_usage['avg_daily_hours'].min() - 0.05,
-    avg_usage['avg_daily_hours'].max() + 0.05
-)
+        avg_usage['avg_daily_hours'].min() - 0.05,
+        avg_usage['avg_daily_hours'].max() + 0.05
+    )
 
     for tick in ax2.get_xticklabels() + ax2.get_yticklabels():
         tick.set_fontfamily(font)
@@ -194,7 +276,7 @@ with col_right:
     st.pyplot(fig2)
     plt.close()
 
-st.divider()
+decorative_divider()
 
 # ============================================================
 # ROW 2 — OBJECTIVE 3 (full width)
@@ -246,9 +328,26 @@ plt.tight_layout()
 st.pyplot(fig3)
 plt.close()
 
-st.divider()
+decorative_divider()
 
 # ============================================================
 # FOOTER
 # ============================================================
-st.caption("Data Source: Gen-Z Social Media Usage Dataset (Kaggle) | Dashboard built with Streamlit")
+st.markdown("""
+    <div style="
+        background: linear-gradient(135deg, #FFB3C1, #FFDDA1);
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+        margin-top: 20px;
+    ">
+        <p style="
+            color: #5c3d4e;
+            font-family: 'Palatino Linotype', serif;
+            font-size: 0.9em;
+            margin: 0;
+        ">
+        🌸 Data Source: Gen-Z Social Media Usage Dataset (Kaggle) &nbsp;|&nbsp; Built with Streamlit 🌸
+        </p>
+    </div>
+""", unsafe_allow_html=True)
